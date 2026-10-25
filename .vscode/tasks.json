@@ -1,0 +1,76 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {"id": "cameraUrl", "type": "promptString", "description": "Telefon MJPEG/RTSP adresi", "default": "http://PHONE_IP:8080/stream.mjpg"}
+  ],
+  "tasks": [
+    {
+      "label": "ForgePulse: Başlat",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\launch.ps1"],
+      "problemMatcher": [],
+      "group": {"kind": "build", "isDefault": true}
+    },
+    {
+      "label": "ForgePulse: Kurulum",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\setup.ps1"],
+      "problemMatcher": []
+    },
+    {
+      "label": "ForgePulse: API",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\start.ps1"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {"panel": "dedicated"}
+    },
+    {
+      "label": "ForgePulse: React",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\start-web.ps1"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {"panel": "dedicated"}
+    },
+    {
+      "label": "ForgePulse: VM Modbus",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\start-vm.ps1", "-Service", "modbus"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {"panel": "dedicated"}
+    },
+    {
+      "label": "ForgePulse: VM MQTT",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\start-vm.ps1", "-Service", "mqtt"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {"panel": "dedicated"}
+    },
+    {
+      "label": "ForgePulse: Telefon kamera",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\host\\start-vm.ps1", "-Service", "camera", "-CameraUrl", "${input:cameraUrl}"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {"panel": "dedicated"}
+    },
+    {
+      "label": "ForgePulse: Testler",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "pytest", "-q", "--basetemp=work/pytest"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    }
+  ]
+}
